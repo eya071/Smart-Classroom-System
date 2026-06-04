@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="no">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Brukerveiledning · Lumen Classroom</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <div class="shapes">
+      <div class="glow glow-1"></div>
+      <div class="glow glow-2"></div>
+      <div class="shape shape-1"></div>
+      <div class="shape shape-2"></div>
+    </div>
+
+    <nav class="nav">
+      <div class="logo">
+        <div class="logo-icon">🎓</div>
+        Lumen Classroom
+      </div>
+      <a href="/" class="logout-btn">← Tilbake</a>
+    </nav>
+
+    <main class="admin-wrap fade-up">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Brukerveiledning</h1>
+          <p class="subtitle">Slik bruker du Lumen Classroom</p>
+        </div>
+      </div>
+
+      <div class="cards">
+        <article class="glass card">
+          <div class="card-head">
+            <div class="avatar" style="font-size: 1.1rem">EL</div>
+            <div class="status"><span class="dot new"></span>For elever</div>
+          </div>
+          <p style="font-weight: 500; margin-bottom: 0.8rem">
+            Slik kommer du i gang:
+          </p>
+          <div class="step-list">
+            <div class="step-item">
+              <span class="step-num">1</span>
+              <p>Gå til forsiden og velg <strong>Elev</strong></p>
+            </div>
+            <div class="step-item">
+              <span class="step-num">2</span>
+              <p>Registrer deg med navn, passord og klasse — eller logg inn</p>
+            </div>
+            <div class="step-item">
+              <span class="step-num">3</span>
+              <p>
+                Skriv hva du trenger hjelp med og trykk
+                <strong>Send forespørsel</strong>
+              </p>
+            </div>
+            <div class="step-item">
+              <span class="step-num">4</span>
+              <p>Vent på svar — du får varsling 🔔 når læreren har svart</p>
+            </div>
+            <div class="step-item">
+              <span class="step-num">5</span>
+              <p>Trykk på bjella 🔔 for å se svaret fra læreren</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="glass card">
+          <div class="card-head">
+            <div class="avatar" style="font-size: 1.1rem">LÆ</div>
+            <div class="status">
+              <span class="dot resolved"></span>For lærere
+            </div>
+          </div>
+          <p style="font-weight: 500; margin-bottom: 0.8rem">
+            Slik administrerer du klassen:
+          </p>
+          <div class="step-list">
+            <div class="step-item">
+              <span class="step-num">1</span>
+              <p>Gå til forsiden og velg <strong>Lærer</strong></p>
+            </div>
+            <div class="step-item">
+              <span class="step-num">2</span>
+              <p>Registrer deg med navn og passord — eller logg inn</p>
+            </div>
+            <div class="step-item">
+              <span class="step-num">3</span>
+              <p>Du sendes automatisk til <strong>admin-panelet</strong></p>
+            </div>
+            <div class="step-item">
+              <span class="step-num">4</span>
+              <p>
+                Se forespørsler fra elever — trykk <strong>Start</strong> når du
+                jobber med den
+              </p>
+            </div>
+            <div class="step-item">
+              <span class="step-num">5</span>
+              <p>
+                Skriv svar og trykk <strong>Marker som løst</strong> — eleven
+                får varsling
+              </p>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div class="glass card" style="margin-top: 1rem">
+        <h2 style="font-size: 1.1rem; margin-bottom: 1rem">
+          Hva betyr statusene?
+        </h2>
+        <div class="status-list">
+          <div class="status-item">
+            <div class="status"><span class="dot new"></span>Ny</div>
+            <p class="message" style="margin: 0">
+              Forespørselen er sendt men ikke sett av lærer ennå
+            </p>
+          </div>
+          <div class="status-item">
+            <div class="status"><span class="dot progress"></span>Pågår</div>
+            <p class="message" style="margin: 0">
+              Læreren jobber med forespørselen din
+            </p>
+          </div>
+          <div class="status-item">
+            <div class="status"><span class="dot resolved"></span>Løst</div>
+            <p class="message" style="margin: 0">
+              Læreren har svart — sjekk bjella 🔔
+            </p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

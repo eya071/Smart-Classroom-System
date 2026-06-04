@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="no">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mine meldinger · Lumen Classroom</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <div class="shapes">
+      <div class="glow glow-1"></div>
+      <div class="glow glow-2"></div>
+    </div>
+
+    <nav class="nav">
+      <div class="logo">
+        <div class="logo-icon">🎓</div>
+        Lumen Classroom
+      </div>
+      <div style="display: flex; gap: 12px; align-items: center">
+        <a href="/hjem" class="btn">← Tilbake</a>
+        <a href="/logout" class="logout-btn">Logg ut</a>
+      </div>
+    </nav>
+
+    <main class="admin-wrap fade-up">
+      <h1 class="page-title">Mine meldinger</h1>
+      <p class="subtitle">Her ser du svar fra læreren din</p>
+
+      <div class="cards">
+        {% if requests and requests|length > 0 %} {% for req in requests %}
+        <article class="glass card">
+          <div class="card-head">
+            <p class="message" style="margin: 0">
+              <strong>Spørsmål:</strong> {{ req.message }}
+            </p>
+            <div class="status">
+              {% if req.status == "Ny" %}
+              <span class="dot new"></span> Venter på svar {% elif req.status ==
+              "Pågår" %} <span class="dot progress"></span> Læreren jobber med
+              det {% elif req.status == "Løst" %}
+              <span class="dot resolved"></span> Besvart {% endif %}
+            </div>
+          </div>
+
+          {% if req.reply %}
+          <div class="reply-box">
+            <p style="margin: 0 0 4px 0; font-size: 0.8rem; opacity: 0.6">
+              Svar fra lærer:
+            </p>
+            <p style="margin: 0">{{ req.reply }}</p>
+          </div>
+
+          <button class="btn" onclick="toggleForm(this)">
+            💬 Still et oppfølgingsspørsmål
+          </button>
+
+          <form
+            method="POST"
+            action="/hjem"
+            enctype="multipart/form-data"
+            class="followup-form"
+            style="display: none; margin-top: 12px"
+          >
+            <input
+              type="hidden"
+              name="message"
+              id="hidden-msg-{{ loop.index }}"
+            />
+            <textarea
+              placeholder="Skriv oppfølgingsspørsmålet ditt..."
+              oninput="document.getElementById('hidden-msg-{{ loop.index }}').value = 'Oppfølging: ' + this.value"
+              style="width: 100%; margin-bottom: 8px"
+            ></textarea>
+            <button type="submit" class="btn primary">Send →</button>
+          </form>
+          {% endif %}
+        </article>
+        {% endfor %} {% else %}
+        <div class="glass card" style="text-align: center; padding: 40px">
+          <p style="font-size: 2rem">📭</p>
+          <p>Du har ingen meldinger ennå.</p>
+          <a
+            href="/hjem"
+            class="btn-hero"
+            style="display: inline-block; margin-top: 12px"
+            >Send en forespørsel →</a
+          >
+        </div>
+        {% endif %}
+      </div>
+    </main>
+
+    <script>
+      function toggleForm(btn) {
+        const form = btn.nextElementSibling;
+        const vis = form.style.display === "none";
+        form.style.display = vis ? "block" : "none";
+        btn.textContent = vis ? "✕ Avbryt" : "💬 Still et oppfølgingsspørsmål";
+      }
+    </script>
+  </body>
+</html>

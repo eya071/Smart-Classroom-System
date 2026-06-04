@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="no">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Lumen Classroom</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <div class="shapes">
+      <div class="glow glow-1"></div>
+      <div class="glow glow-2"></div>
+      <div class="shape shape-1"></div>
+      <div class="shape shape-2"></div>
+      <div class="shape shape-3"></div>
+      <div class="shape shape-4"></div>
+    </div>
+
+    <main class="landing-wrap fade-up">
+      <div class="landing-box">
+        <div style="text-align: center; margin-bottom: 2rem">
+          <div style="font-size: 3rem; margin-bottom: 8px">🎓</div>
+          <h1 style="font-size: 1.8rem; margin: 0">Lumen Classroom</h1>
+          <p style="color: var(--muted); margin-top: 6px; font-size: 0.95rem">
+            Det smarte klasserommet
+          </p>
+        </div>
+
+        {% if error %}
+        <div class="error-box">⚠️ {{ error }}</div>
+        {% endif %}
+
+        <div class="role-picker">
+          <div class="role-card" id="rc-elev" onclick="pickRole('elev')">
+            <svg
+              width="48"
+              height="48"
+              viewBox="0 0 48 48"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect width="48" height="48" rx="14" fill="url(#grad1)" />
+              <defs>
+                <linearGradient id="grad1" x1="0" y1="0" x2="48" y2="48">
+                  <stop offset="0%" stop-color="#8b5cf6" />
+                  <stop offset="100%" stop-color="#3b82f6" />
+                </linearGradient>
+              </defs>
+              <circle cx="24" cy="18" r="7" fill="white" fill-opacity="0.9" />
+              <path
+                d="M10 38c0-7.732 6.268-14 14-14s14 6.268 14 14"
+                stroke="white"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                fill="none"
+              />
+              <path
+                d="M24 10 L38 17 L24 24 L10 17 Z"
+                fill="white"
+                fill-opacity="0.3"
+              />
+            </svg>
+            <div class="role-label">Elev</div>
+            <div class="role-sub">Send forespørsler</div>
+          </div>
+          <div class="role-card" id="rc-laerer" onclick="pickRole('laerer')">
+            <svg
+              width="48"
+              height="48"
+              viewBox="0 0 48 48"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect width="48" height="48" rx="14" fill="url(#grad2)" />
+              <defs>
+                <linearGradient id="grad2" x1="0" y1="0" x2="48" y2="48">
+                  <stop offset="0%" stop-color="#3b82f6" />
+                  <stop offset="100%" stop-color="#8b5cf6" />
+                </linearGradient>
+              </defs>
+              <circle cx="24" cy="17" r="7" fill="white" fill-opacity="0.9" />
+              <path
+                d="M10 38c0-7.732 6.268-14 14-14s14 6.268 14 14"
+                stroke="white"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                fill="none"
+              />
+              <rect
+                x="30"
+                y="26"
+                width="10"
+                height="8"
+                rx="2"
+                fill="white"
+                fill-opacity="0.8"
+              />
+              <line
+                x1="32"
+                y1="29"
+                x2="38"
+                y2="29"
+                stroke="#8b5cf6"
+                stroke-width="1.5"
+              />
+              <line
+                x1="32"
+                y1="31"
+                x2="38"
+                y2="31"
+                stroke="#8b5cf6"
+                stroke-width="1.5"
+              />
+            </svg>
+            <div class="role-label">Lærer</div>
+            <div class="role-sub">Administrer klassen</div>
+          </div>
+        </div>
+
+        <div class="glass auth-box" id="auth-box">
+          <div class="no-role-msg" id="no-role-msg">
+            👆 Velg hvem du er for å fortsette
+          </div>
+
+          <div id="auth-content" style="display: none">
+            <div class="auth-tabs">
+              <button class="auth-tab active" onclick="switchTab('login')">
+                Logg inn
+              </button>
+              <button class="auth-tab" onclick="switchTab('register')">
+                Registrer deg
+              </button>
+            </div>
+
+            <form
+              class="auth-form active"
+              id="tab-login"
+              method="POST"
+              action="/login"
+            >
+              <input type="hidden" name="role" id="login-role" value="" />
+              <label>Navn</label>
+              <input
+                type="text"
+                name="name"
+                placeholder="Ola Nordmann"
+                required
+                autocomplete="off"
+              />
+              <label>Passord</label>
+              <input
+                type="password"
+                name="password"
+                placeholder="Ditt passord"
+                required
+              />
+
+              <button type="submit" class="btn-hero" style="margin-top: 8px">
+                Logg inn →
+              </button>
+            </form>
+
+            <form
+              class="auth-form"
+              id="tab-register"
+              method="POST"
+              action="/register"
+            >
+              <input type="hidden" name="role" id="reg-role" value="" />
+              <label>Navn</label>
+              <input
+                type="text"
+                name="name"
+                placeholder="Ola Nordmann"
+                required
+                autocomplete="off"
+              />
+              <label>Passord</label>
+              <input
+                type="password"
+                name="password"
+                placeholder="Velg et passord"
+                required
+              />
+              <div id="class-wrap">
+                <label>Klasse</label>
+                <select name="class" class="select-field">
+                  <option value="">Velg klasse</option>
+                  <option value="2ima">2IMA</option>
+                  <option value="2imb">2IMB</option>
+                  <option value="2imc">2IMC</option>
+                  <option value="2imd">2IMD</option>
+                </select>
+              </div>
+              <div id="laerer-kode-wrap" style="display: none">
+                <label>Lærer-kode</label>
+                <input
+                  type="password"
+                  name="laerer_kode"
+                  placeholder="Kode fra administrator"
+                />
+              </div>
+              <button type="submit" class="btn-hero" style="margin-top: 8px">
+                Opprett konto →
+              </button>
+            </form>
+          </div>
+        </div>
+        <div style="text-align: center; margin-top: 1.5rem">
+          <a
+            href="/hjelp"
+            style="
+              color: var(--muted);
+              font-size: 0.85rem;
+              text-decoration: none;
+            "
+          >
+            Trenger du hjelp? Se brukerveiledning →
+          </a>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      function pickRole(role) {
+        document
+          .getElementById("rc-elev")
+          .classList.toggle("selected", role === "elev");
+        document
+          .getElementById("rc-laerer")
+          .classList.toggle("selected", role === "laerer");
+        document.getElementById("no-role-msg").style.display = "none";
+        document.getElementById("auth-content").style.display = "block";
+        document.getElementById("login-role").value = role;
+        document.getElementById("reg-role").value = role;
+        document.getElementById("class-wrap").style.display =
+          role === "elev" ? "block" : "none";
+        document.getElementById("laerer-kode-wrap").style.display =
+          role === "laerer" ? "block" : "none";
+      }
+
+      function switchTab(tab) {
+        document.querySelectorAll(".auth-tab").forEach((t, i) => {
+          t.classList.toggle(
+            "active",
+            (i === 0 && tab === "login") || (i === 1 && tab === "register"),
+          );
+        });
+        document
+          .getElementById("tab-login")
+          .classList.toggle("active", tab === "login");
+        document
+          .getElementById("tab-register")
+          .classList.toggle("active", tab === "register");
+      }
+    </script>
+  </body>
+</html>

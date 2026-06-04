@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="no">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin · Lumen Classroom</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <div class="shapes">
+      <div class="glow glow-1"></div>
+      <div class="glow glow-2"></div>
+    </div>
+
+    <nav class="nav">
+      <div class="logo">
+        <div class="logo-icon">🎓</div>
+        Lumen Admin
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px">
+        <span style="font-size: 0.85rem; color: var(--muted)"
+          >👩‍🏫 {{ session.name }}</span
+        >
+        <a href="/logout" class="logout-btn">Logg ut</a>
+      </div>
+    </nav>
+
+    <main class="admin-wrap fade-up">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Hjelpeforespørsler</h1>
+          <p class="subtitle">Oversikt over alle meldinger fra elever</p>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stat glass purple">
+          <span class="icon">📥</span>
+          <div class="label">Totalt</div>
+          <div class="value">{{ requests | length }}</div>
+        </div>
+        <div class="stat glass yellow">
+          <span class="icon">⏳</span>
+          <div class="label">Nye</div>
+          <div class="value">
+            {{ requests | selectattr('status', 'equalto', 'Ny') | list | length
+            }}
+          </div>
+        </div>
+        <div class="stat glass blue">
+          <span class="icon">🔧</span>
+          <div class="label">Pågår</div>
+          <div class="value">
+            {{ requests | selectattr('status', 'equalto', 'Pågår') | list |
+            length }}
+          </div>
+        </div>
+        <div class="stat glass green">
+          <span class="icon">✅</span>
+          <div class="label">Løst</div>
+          <div class="value">
+            {{ requests | selectattr('status', 'equalto', 'Løst') | list |
+            length }}
+          </div>
+        </div>
+      </div>
+
+      <div class="filter-bar">
+        <button class="filter-btn active" onclick="filter('alle', this)">
+          Alle
+        </button>
+        <button class="filter-btn" onclick="filter('Ny', this)">🟣 Nye</button>
+        <button class="filter-btn" onclick="filter('Pågår', this)">
+          🟡 Pågår
+        </button>
+        <button class="filter-btn" onclick="filter('Løst', this)">
+          🟢 Løst
+        </button>
+      </div>
+
+      <div class="cards" id="cards-container">
+        {% if requests and requests|length > 0 %} {% for req in requests %}
+        <article class="glass card" data-status="{{ req.status }}">
+          <div class="card-head">
+            <div class="who">
+              <div class="avatar">{{ req.name[0] | upper if req.name }}</div>
+              <div>
+                <div class="name">{{ req.name or "Ukjent" }}</div>
+                <div class="time">
+                  🕐 {{ req.time.strftime('%d.%m.%Y %H:%M') if req.time else
+                  'Ukjent tid' }}
+                </div>
+              </div>
+            </div>
+            <div class="status">
+              {% if req.status == "Ny" %}
+              <span class="dot new"></span>Ny {% elif req.status == "Pågår" %}
+              <span class="dot progress"></span>Pågår {% elif req.status ==
+              "Løst" %} <span class="dot resolved"></span>Løst {% endif %}
+            </div>
+          </div>
+
+          <p class="message">{{ req.message or "Ingen melding" }}</p>
+
+          {% if req.image %}
+          <img
+            src="{{ url_for('static', filename='uploads/' + req.image) }}"
+            class="img-preview"
+            onclick="openImage(this.src)"
+            alt="Vedlegg"
+          />
+          {% endif %} {% if req.reply %}
+          <div class="reply-box">
+            <p style="margin: 0 0 4px; font-size: 0.78rem; opacity: 0.6">
+              ✅ Svar sendt:
+            </p>
+            <p style="margin: 0; font-size: 0.9rem">{{ req.reply }}</p>
+          </div>
+          {% endif %} {% if req.status != "Løst" %}
+          <form method="POST" action="/update/{{ req.id }}">
+            <textarea
+              name="reply"
+              class="reply-area"
+              placeholder="Skriv svar til {{ req.name }}..."
+            ></textarea>
+            <div class="actions">
+              {% if req.status == "Ny" %}
+              <button name="action" value="start" class="btn-start">
+                ⏳ Start
+              </button>
+              {% endif %}
+              <button name="action" value="solve" class="btn-solve">
+                ✅ Marker som løst
+              </button>
+            </div>
+          </form>
+          {% endif %}
+        </article>
+        {% endfor %} {% else %}
+        <div class="glass empty-state">
+          <p style="font-size: 3rem; margin-bottom: 1rem">📭</p>
+          <p style="color: var(--muted)">
+            Ingen forespørsler ennå — alt er rolig!
+          </p>
+        </div>
+        {% endif %}
+      </div>
+    </main>
+
+    <script>
+      function filter(status, btn) {
+        document
+          .querySelectorAll(".filter-btn")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        document.querySelectorAll(".card").forEach((card) => {
+          card.style.display =
+            status === "alle" || card.dataset.status === status
+              ? "flex"
+              : "none";
+        });
+      }
+      function openImage(src) {
+        let win = window.open("");
+        win.document.write(
+          '<img src="' +
+            src +
+            '" style="width:100%; max-width:800px; margin:auto; display:block;">',
+        );
+      }
+    </script>
+  </body>
+</html>
